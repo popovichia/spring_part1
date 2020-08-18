@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="center" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.121"
+      fx:controller="java2.chat.server.JFXController">
+    <HBox fx:id="hboxStart">
+        <VBox>
+            <TextField fx:id="textFieldPort" promptText="Введите номер порта сервера:" >9999</TextField>
+            <Button fx:id="buttonStartServer" onAction="#startServer" text="Start Server" />
+        </VBox>
+    </HBox>
+    <HBox fx:id="hboxStop" visible="false" managed="false" >
+        <VBox>
+            <Button fx:id="buttonStopServer" onAction="#stopServer" text="Stop Server"/>
+        </VBox>
+    </HBox>
+    <HBox>
+        <VBox>
+            <Label>Журнал действий сервера:</Label>
+            <TextArea fx:id="textAreaServerLog" editable="false" />
+        </VBox>
+    </HBox>
+</VBox>
