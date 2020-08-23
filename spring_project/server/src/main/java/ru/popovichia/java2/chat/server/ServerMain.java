@@ -5,20 +5,31 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import ru.popovichia.java2.chat.server.entity.Command;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import ru.popovichia.java2.chat.ApplicationConfiguration;
 import ru.popovichia.java2.chat.server.entity.Message;
 import ru.popovichia.java2.chat.server.entity.User;
 import ru.popovichia.java2.chat.server.services.DBService;
 import ru.popovichia.java2.chat.server.services.UserService;
 
 public class ServerMain implements Runnable {
+    
+    private DBService dbService;
     private ArrayList<ClientService> clientsServices;
     private ArrayList<User> listAllUsers;
     private ServerSocket serverSocket;
     private Socket socket;
     private int port;
     private JFXController jfxController;
+    private ApplicationContext applicationContext;
+
     public ServerMain(int port, JFXController jfxController) {
+        this.applicationContext = new AnnotationConfigApplicationContext(ApplicationConfiguration.class);
+        this.dbService = applicationContext.getBean(DBService.class);
+        initDB();
+        this.jfxController = jfxController;
+        this.jfxController.writeLog("База данных инициализирована.");
         this.clientsServices = new ArrayList<>();
         this.listAllUsers = new ArrayList<>();
         this.port = port;
@@ -26,10 +37,8 @@ public class ServerMain implements Runnable {
         this.jfxController.writeLog("Сервер запущен.\n"
                 + "Для подключения к серверу, используйте параметры:\n"
                 + "Сервер - localhost, порт - " + port);
-        initilizeDB();
-        this.jfxController.writeLog("База данных инициализирована.");
     }
-    public void initilizeDB() {
+    private void initDB() {
         String sqlRequestUsers =
                 "CREATE TABLE IF NOT EXISTS users ( "
                 + "id INTEGER NOT NULL PRIMARY KEY, "
@@ -42,10 +51,8 @@ public class ServerMain implements Runnable {
                 + "id INTEGER NOT NULL Primary key, "
                 + "user_id INTEGER NOT NULL, "
                 + "block_user_id INTEGER NOT NULL);";
-        DBService.connect();
-        DBService.checkTable(sqlRequestUsers);
-        DBService.checkTable(sqlRequestBlackList);
-        DBService.disconnect();
+        dbService.initTable(sqlRequestUsers);
+        dbService.initTable(sqlRequestBlackList);        
     }
     @Override
     public void run() {

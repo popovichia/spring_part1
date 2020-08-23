@@ -6,38 +6,26 @@
 package ru.popovichia.java2.chat.server.services;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.springframework.beans.factory.annotation.Autowired;
 
-/**
- *
- * @author igor
- */
 public class DBService {
-    private static Connection connection;
-    private static Statement statement;
-    public static void connect() {
+    
+    @Autowired
+    private Connection connection;
+
+    private Statement statement;
+    
+    public boolean initTable(String sqlRequest) {
+        boolean result = false;
         try {
-            Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:main.db");
             statement = connection.createStatement();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    public static void checkTable(String sqlRequest) {
-        try {
             statement.executeUpdate(sqlRequest);
-        } catch (SQLException e) {
-            e.printStackTrace();
+            result = true;
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
         }
-    }
-    public static void disconnect() {
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        return result;
     }
 }
