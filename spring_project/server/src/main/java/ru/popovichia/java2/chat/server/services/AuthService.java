@@ -1,4 +1,4 @@
-package java2.chat.server.services;
+package ru.popovichia.java2.chat.server.services;
 
 import java.sql.*;
 

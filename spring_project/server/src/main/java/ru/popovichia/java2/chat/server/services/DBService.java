@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package java2.chat.server.services;
+package ru.popovichia.java2.chat.server.services;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

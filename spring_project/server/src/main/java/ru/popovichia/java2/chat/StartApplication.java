@@ -1,4 +1,4 @@
-package java2.chat;
+package ru.popovichia.java2.chat;
 
 import java.io.IOException;
 import javafx.application.Application;

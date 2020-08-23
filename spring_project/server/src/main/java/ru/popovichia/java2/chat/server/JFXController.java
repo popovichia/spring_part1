@@ -1,4 +1,4 @@
-package java2.chat.server;
+package ru.popovichia.java2.chat.server;
 
 import java.io.File;
 import java.io.FileInputStream;

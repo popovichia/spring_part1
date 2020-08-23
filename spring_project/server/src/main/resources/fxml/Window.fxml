@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox alignment="center" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.121"
-      fx:controller="java2.chat.server.JFXController">
+      fx:controller="ru.popovichia.java2.chat.server.JFXController">
     <HBox fx:id="hboxStart">
         <VBox>
             <TextField fx:id="textFieldPort" promptText="Введите номер порта сервера:" >9999</TextField>

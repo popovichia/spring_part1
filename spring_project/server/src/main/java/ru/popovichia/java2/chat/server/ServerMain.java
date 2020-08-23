@@ -1,15 +1,15 @@
-package java2.chat.server;
+package ru.popovichia.java2.chat.server;
 
-import java2.chat.server.services.ClientService;
+import ru.popovichia.java2.chat.server.services.ClientService;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java2.chat.server.entity.Command;
-import java2.chat.server.entity.Message;
-import java2.chat.server.entity.User;
-import java2.chat.server.services.DBService;
-import java2.chat.server.services.UserService;
+import ru.popovichia.java2.chat.server.entity.Command;
+import ru.popovichia.java2.chat.server.entity.Message;
+import ru.popovichia.java2.chat.server.entity.User;
+import ru.popovichia.java2.chat.server.services.DBService;
+import ru.popovichia.java2.chat.server.services.UserService;
 
 public class ServerMain implements Runnable {
     private ArrayList<ClientService> clientsServices;

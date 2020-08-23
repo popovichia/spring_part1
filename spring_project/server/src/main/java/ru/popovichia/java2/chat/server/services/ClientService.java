@@ -1,4 +1,4 @@
-package java2.chat.server.services;
+package ru.popovichia.java2.chat.server.services;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,11 +7,11 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
-import java2.chat.server.JFXController;
-import java2.chat.server.ServerMain;
-import java2.chat.server.entity.Command;
-import java2.chat.server.entity.Message;
-import java2.chat.server.entity.User;
+import ru.popovichia.java2.chat.server.JFXController;
+import ru.popovichia.java2.chat.server.ServerMain;
+import ru.popovichia.java2.chat.server.entity.Command;
+import ru.popovichia.java2.chat.server.entity.Message;
+import ru.popovichia.java2.chat.server.entity.User;
 
 public class ClientService implements Runnable {
     private ServerMain serverMain;
