@@ -14,13 +14,11 @@ public class DBService {
     
     @Autowired
     private Connection connection;
-
-    private Statement statement;
     
     public boolean initTable(String sqlRequest) {
         boolean result = false;
         try {
-            statement = connection.createStatement();
+            Statement statement = connection.createStatement();
             statement.executeUpdate(sqlRequest);
             result = true;
         } catch (SQLException sqlException) {

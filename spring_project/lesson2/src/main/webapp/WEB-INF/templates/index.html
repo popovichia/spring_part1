@@ -1,0 +1,35 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="windows-1251"/>
+        <title>Продукты</title>
+    </head>
+    <body>
+        <h1>Поработайте с продуктами</h1>
+        <form action="/" method="GET">
+            <button style="height: 25px; width: 200px">Показать все продукты</button>
+        </form>
+        <form action="/" method="POST">
+            <button style="height: 25px; width: 200px" type="submit">Найти продукт по id</button>
+            <input style="height: 15px; width: 50px" name="id"/>
+        </form>
+        <form action="/addProductToRepository" method="POST">
+            <button style="height: 25px; width: 200px" type="submit">Добавить продукт</button>
+            <input style="height: 15px; width: 200px" value="title" name="title"/>
+            <input style="height: 15px; width: 50px" value="cost" name="cost"/>
+        </form>
+        <table border="1">
+            <tr>
+                <th>Идентификатор</th>
+                <th>Наименование</th>
+                <th>Стоимость</th>
+            </tr>
+            <tr th:each="product : ${listProducts}">
+                <td th:text="${product.id}"></td>
+                <td th:text="${product.title}"></td>
+                <td th:text="${product.cost}"></td>                    
+            </tr>    
+        </table>
+    </body>
+</html>

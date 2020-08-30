@@ -10,6 +10,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import ru.popovichia.java2.chat.ApplicationConfiguration;
 
 public class JFXController {
     
@@ -52,9 +55,11 @@ public class JFXController {
     }
     public void startServer() {
         try {
+//            ApplicationContext applicationContext = new AnnotationConfigApplicationContext(ApplicationConfiguration.class);
             changeUI(true);
             int port = Integer.valueOf(textFieldPort.getText());
             this.serverMain = new ServerMain(port, this);
+//            this.serverMain = applicationContext.getBean(ServerMain.class);
             Thread serverMainThread = new Thread(this.serverMain);
             serverMainThread.start();
         } catch (Exception exception) {
