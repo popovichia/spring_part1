@@ -8,7 +8,7 @@
     <modules>
         <module>client</module>
         <module>server</module>
-        <module>lesson2</module>
+        <module>spring_mvc_eshop</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
