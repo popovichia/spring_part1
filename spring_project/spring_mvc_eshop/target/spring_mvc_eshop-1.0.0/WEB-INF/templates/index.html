@@ -1,0 +1,123 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="windows-1251"/>
+        <title>Интернет-магазин</title>
+        <style>
+            table, th, td {
+               border: 1px solid black;
+            }        
+        </style>
+    </head>
+    <body>
+        <h1>Интернет-магазин</h1>
+        <h2>Все заказы</h2>
+        <div>
+            <form action="./createOrder" method="POST">
+                <label>Имя покупателя</label>
+                <input style="height: 15px; width: 200px" name="customerFirstName"/><br/>
+                <label>Фамилия покупателя</label>
+                <input style="height: 15px; width: 200px" name="customerLastName"/><br/>
+                <label>Телефон покупателя</label>
+                <input style="height: 15px; width: 200px" name="customerPhoneNumber"/><br/>
+                <button style="height: 25px; width: 150px" type="submit">Создать заказ</button>
+            </form>
+        </div>
+        <div>
+            <div style="display: inline-block">
+                <table>
+                    <tr>
+                        <th>Id заказа</th>
+                        <th>Имя покупателя</th>
+                        <th>Фамилия покупателя</th>
+                        <th>Телефон покупателя</th>
+                        <th>Дата заказа</th>
+                        <th></th>
+                    </tr>
+                    <tr th:each="order : ${listOrders}">
+                        <td th:text="${order.id}"></td>
+                        <td th:text="${order.customer.firstName}"></td>
+                        <td th:text="${order.customer.lastName}"></td>
+                        <td th:text="${order.customer.phoneNumber}"></td>
+                        <td th:text="${order.orderDate}"></td>
+                        <td>
+                            <form style="display: inline" th:action="@{./getOrderById?id={id}(id = ${order.id})}" th:method="PUT">
+                                <button style="height: 25px; width: 30px" type="submit">E</button>
+                            </form>
+                            <form style="display: inline" th:action="@{./deleteOrderById?id={id}(id = ${order.id})}" th:method="DELETE">
+                                <button style="height: 25px; width: 30px" type="submit">X</button>
+                            </form>
+                        </td>
+                    </tr>    
+                </table>
+            </div>
+            <div style="display: inline-block;" th:if="${order != null}">
+                <h2>Редактирование заказа</h2>
+                <form style="display: inline" action="./updateOrderById" method="POST">
+                    <label>Имя покупателя</label>
+                    <input style="height: 15px; width: 200px" name="customerNewFirstName" th:value="${order.customer.firstName}"/><br/>
+                    <label>Фамилия покупателя</label>
+                    <input style="height: 15px; width: 200px" name="customerNewLastName" th:value="${order.customer.lastName}"/><br/>
+                    <label>Телефон покупателя</label>
+                    <input style="height: 15px; width: 200px" name="customerNewPhoneNumber" th:value="${order.customer.phoneNumber}"/><br/>
+                    <button style="height: 25px; width: 150px" type="submit">Сохранить</button>
+                </form>
+            </div>
+        </div>
+        <h2>Позиции заказов</h2>
+        <div>
+            <form action="./addItemToOrder" method="POST">
+                <label>Id заказа</label>
+                <input style="height: 15px; width: 200px" name="orderId"/><br/>
+                <label>Id продукта</label>
+                <input style="height: 15px; width: 200px" name="productId"/><br/>
+                <label>Количество продукта</label>
+                <input style="height: 15px; width: 200px" name="productCount"/><br/>
+                <button style="height: 25px; width: 200px" type="submit">Добавить позицию в заказ</button>
+            </form>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <th>Id позиции</th>
+                    <th>Id заказа</th>
+                    <th>Наименование продукта</th>
+                    <th>Количество продукта</th>
+                    <th>Цена позиции</th>
+                </tr>
+                <tr  th:each="orderItem : ${listOrdersItems}">
+                    <td th:text="${orderItem.id}"></td>
+                    <td th:text="${orderItem.order.id}"></td>                    
+                    <td th:text="${orderItem.product.title}"></td>
+                    <td th:text="${orderItem.productCount}"></td>
+                    <td th:text="${orderItem.productPrice}"></td>
+                </tr>    
+            </table>
+        </div>
+        <h2>База данных продуктов</h2>
+        <div>
+            <form action="./createProduct" method="POST">
+                <label>Название продукта</label>
+                <input style="height: 15px; width: 200px" name="productTitle"/><br/>
+                <label>Цена продукта</label>
+                <input style="height: 15px; width: 200px" name="productPrice"/><br/>
+                <button style="height: 25px; width: 200px" type="submit">Добавить продукт</button>
+            </form>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <th>Id продукта</th>
+                    <th>Наименование</th>
+                    <th>Цена</th>
+                </tr>
+                <tr th:each="product : ${listProducts}">
+                    <td th:text="${product.id}"></td>
+                    <td th:text="${product.title}"></td>
+                    <td th:text="${product.price}"></td>                    
+                </tr>    
+            </table>
+        </div>
+    </body>
+</html>
