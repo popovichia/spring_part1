@@ -1,9 +1,11 @@
 package ru.popovichia.eshop.repositories;
 
+import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.popovichia.eshop.entities.OrderItem;
 import ru.popovichia.eshop.entities.Product;
 
 /**
@@ -22,7 +24,7 @@ public class ProductsRepository {
     
     public void createProduct(
             String productTitle,
-            float productPrice
+            BigDecimal productPrice
     ) {
         EntityTransaction entityTransaction = entityManager.getTransaction();
         Product product = new Product(productTitle, productPrice);

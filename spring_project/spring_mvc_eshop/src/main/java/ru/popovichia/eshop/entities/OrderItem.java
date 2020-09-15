@@ -1,5 +1,6 @@
 package ru.popovichia.eshop.entities;
 
+import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,7 +32,7 @@ public class OrderItem {
     private int productCount;
     
     @Column(name = "product_price")
-    private float productPrice;
+    private BigDecimal productPrice;
 
     @ManyToOne()
     @JoinColumn(name = "order_id")
@@ -64,13 +65,14 @@ public class OrderItem {
         this.productCount = productCount;
     }
 
-    public float getProductPrice() {
+    public BigDecimal getProductPrice() {
         return productPrice;
     }
 
-    public void setProductPrice(float productPrice) {
+    public void setProductPrice(BigDecimal productPrice) {
         this.productPrice = productPrice;
     }
+
 
     public Order getOrder() {
         return order;

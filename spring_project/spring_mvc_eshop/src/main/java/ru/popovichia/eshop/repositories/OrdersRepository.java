@@ -42,10 +42,16 @@ public class OrdersRepository {
     public void createOrder(
             String customerFirstName,
             String customerLastName,
-            String customerPhoneNumber
+            String customerPhoneNumber,
+            String customerEmail
     ) {
         EntityTransaction entityTransaction = entityManager.getTransaction();
-        Customer customer = new Customer(customerFirstName, customerLastName, customerPhoneNumber);
+        Customer customer = new Customer(
+                customerFirstName,
+                customerLastName,
+                customerPhoneNumber,
+                customerEmail
+        );
         Order order = new Order(customer);
         entityTransaction.begin();
         entityManager.persist(customer);
@@ -57,7 +63,8 @@ public class OrdersRepository {
             Long id,
             String customerNewFirstName,
             String customerNewLastName,
-            String customerNewPhoneNumber
+            String customerNewPhoneNumber,
+            String customerNewEmail
     ) {
         EntityTransaction entityTransaction = entityManager.getTransaction();
         Order order = this.getOrderById(id);
@@ -70,14 +77,13 @@ public class OrdersRepository {
         entityTransaction.commit();
     }
     
-    public void deleteOrderById(long id) {
+    public void deleteOrder(Order order) {
         EntityTransaction entityTransaction = entityManager.getTransaction();
-        Order order = this.getOrderById(id);
         entityTransaction.begin();
         entityManager.remove(order);
         entityTransaction.commit();
     }
-
+    
     public Order getOrderById(long id) {
         return entityManager
                 .createQuery("from Order where id = :id", Order.class)
@@ -85,7 +91,14 @@ public class OrdersRepository {
                 .getSingleResult();
     }
     
-    public void addItemToOrder(
+    public OrderItem getOrderItemById(Long id) {
+        return entityManager
+                .createQuery("from OrderItem where id = :id", OrderItem.class)
+                .setParameter("id", id)
+                .getSingleResult();
+    }
+    
+    public void addOrderItemToOrder(
             Product product,
             Order order,
             int productCount
@@ -100,4 +113,12 @@ public class OrdersRepository {
         entityManager.persist(orderItem);
         entityTransaction.commit();
     }
+
+    public void deleteOrderItem(OrderItem orderItem) {
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+        entityTransaction.begin();
+        entityManager.remove(orderItem);
+        entityTransaction.commit();
+    }
+    
 }

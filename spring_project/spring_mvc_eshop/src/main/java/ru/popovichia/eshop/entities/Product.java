@@ -1,5 +1,6 @@
 package ru.popovichia.eshop.entities;
 
+import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -28,15 +29,15 @@ public class Product {
     private String title;
 
     @Column(name = "price")
-    private float price;
+    private BigDecimal price;
 
-    @OneToMany(cascade = { CascadeType.ALL }, mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<OrderItem> listOrderItems;
 
     public Product() {
     }
 
-    public Product(String title, float price) {
+    public Product(String title, BigDecimal price) {
         this.title = title;
         this.price = price;
     }
@@ -57,11 +58,11 @@ public class Product {
         this.title = title;
     }
 
-    public float getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

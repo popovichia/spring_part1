@@ -21,6 +21,8 @@
                 <input style="height: 15px; width: 200px" name="customerLastName"/><br/>
                 <label>Телефон покупателя</label>
                 <input style="height: 15px; width: 200px" name="customerPhoneNumber"/><br/>
+                <label>E-mail покупателя</label>
+                <input style="height: 15px; width: 200px" name="customerEmail"/><br/>
                 <button style="height: 25px; width: 150px">Создать заказ</button>
             </form>
         </div>
@@ -32,6 +34,7 @@
                         <th>Имя покупателя</th>
                         <th>Фамилия покупателя</th>
                         <th>Телефон покупателя</th>
+                        <th>E-mail покупателя</th>
                         <th>Дата заказа</th>
                         <th></th>
                     </tr>
@@ -40,6 +43,7 @@
                         <td th:text="${order.customer.firstName}"></td>
                         <td th:text="${order.customer.lastName}"></td>
                         <td th:text="${order.customer.phoneNumber}"></td>
+                        <td th:text="${order.customer.email}"></td>
                         <td th:text="${order.orderDate}"></td>
                         <td>
                             <form style="display: inline" th:action="@{./setEditingOrder?id={id}(id = ${order.id})}" th:method="POST">
@@ -61,13 +65,15 @@
                     <input style="height: 15px; width: 200px" name="customerNewLastName" th:value="${editingOrder.customer.lastName}"/><br/>
                     <label>Телефон покупателя</label>
                     <input style="height: 15px; width: 200px" name="customerNewPhoneNumber" th:value="${editingOrder.customer.phoneNumber}"/><br/>
+                    <label>E-mail покупателя</label>
+                    <input style="height: 15px; width: 200px" name="customerNewEmail" th:value="${editingOrder.customer.email}"/><br/>
                     <button style="height: 25px; width: 150px">Сохранить</button>
                 </form>
             </div>
         </div>
         <h2>Позиции заказов</h2>
         <div>
-            <form action="./addItemToOrder" method="POST">
+            <form action="./addOrderItemToOrder" method="POST">
                 <label>Id заказа</label>
                 <input style="height: 15px; width: 200px" name="orderId"/><br/>
                 <label>Id продукта</label>
@@ -85,6 +91,7 @@
                     <th>Наименование продукта</th>
                     <th>Количество продукта</th>
                     <th>Цена позиции</th>
+                    <th></th>
                 </tr>
                 <tr  th:each="orderItem : ${listOrdersItems}">
                     <td th:text="${orderItem.id}"></td>
@@ -92,6 +99,11 @@
                     <td th:text="${orderItem.product.title}"></td>
                     <td th:text="${orderItem.productCount}"></td>
                     <td th:text="${orderItem.productPrice}"></td>
+                    <td>
+                        <form style="display: inline" th:action="@{./deleteOrderItemById?id={id}(id = ${orderItem.id})}" th:method="DELETE">
+                            <button style="height: 25px; width: 30px">X</button>
+                        </form>                        
+                    </td>
                 </tr>    
             </table>
         </div>

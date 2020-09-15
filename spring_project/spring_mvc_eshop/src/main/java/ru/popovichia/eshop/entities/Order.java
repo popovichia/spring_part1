@@ -34,7 +34,7 @@ public class Order {
     @JoinColumn(name = "customer_id")
     private Customer customer;
     
-    @OneToMany(cascade = { CascadeType.ALL }, mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> listOrderItems; 
     
     public Order() {

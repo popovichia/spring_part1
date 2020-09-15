@@ -20,11 +20,17 @@ public class OrdersController {
     
     @PostMapping(path = "/createOrder")
     public String createOrder(
-            @RequestParam(required = true) String customerFirstName,
-            @RequestParam(required = true) String customerLastName,
-            @RequestParam(required = true) String customerPhoneNumber
+            @RequestParam(name = "customerFirstName", required = true) String customerFirstName,
+            @RequestParam(name = "customerLastName", required = true) String customerLastName,
+            @RequestParam(name = "customerPhoneNumber", required = true) String customerPhoneNumber,
+            @RequestParam(name = "customerEmail", required = true) String customerEmail
     ) {
-        serviceImpl.createOrder(customerFirstName, customerLastName, customerPhoneNumber);
+        serviceImpl.createOrder(
+                customerFirstName,
+                customerLastName,
+                customerPhoneNumber,
+                customerEmail
+        );
         return "redirect:./";
     }
     
@@ -46,28 +52,43 @@ public class OrdersController {
             @RequestParam(name = "id", required = true) Long id,
             @RequestParam(name = "customerNewFirstName", required = true) String customerNewFirstName,
             @RequestParam(name = "customerNewLastName", required = true) String customerNewLastName,
-            @RequestParam(name = "customerNewPhoneNumber", required = true) String customerNewPhoneNumber
+            @RequestParam(name = "customerNewPhoneNumber", required = true) String customerNewPhoneNumber,
+            @RequestParam(name = "customerNewEmail", required = true) String customerNewEmail
     ) {
-        serviceImpl.updateOrderById(id, customerNewFirstName, customerNewLastName, customerNewPhoneNumber);
+        serviceImpl.updateOrderById(
+                id,
+                customerNewFirstName,
+                customerNewLastName,
+                customerNewPhoneNumber,
+                customerNewEmail
+        );
         serviceImpl.setEditingOrder(null);
         return "redirect:./";
     }
     
-    @PostMapping(path = "/addItemToOrder")
-    public String addItemToOrder(
-            @RequestParam(required = true) long orderId,
-            @RequestParam(required = true) long productId,
+    @PostMapping(path = "/addOrderItemToOrder")
+    public String addOrderItemToOrder(
+            @RequestParam(required = true) Long orderId,
+            @RequestParam(required = true) Long productId,
             @RequestParam(required = true) int productCount
     ) {
-        serviceImpl.addItemToOrder(orderId, productId, productCount);
+        serviceImpl.addOrderItemToOrder(orderId, productId, productCount);
         return "redirect:./";
     }
     
     @DeleteMapping(path = "/deleteOrderById")
     public String deleteOrderById(
-            @RequestParam(name = "id") long id
+            @RequestParam(name = "id", required = true) Long id
     ) {        
         serviceImpl.deleteOrderById(id);
+        return "redirect:./";
+    }
+    
+    @DeleteMapping(path = "/deleteOrderItemById")
+    public String deleteOrderItemById(
+            @RequestParam(name = "id", required = true) Long id
+    ) {
+        serviceImpl.deleteOrderItemById(id);
         return "redirect:./";
     }
 

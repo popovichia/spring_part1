@@ -1,9 +1,8 @@
 package ru.popovichia.eshop.services;
 
+import java.math.BigDecimal;
 import java.util.List;
-import javax.persistence.EntityTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import ru.popovichia.eshop.entities.Order;
 import ru.popovichia.eshop.entities.OrderItem;
 import ru.popovichia.eshop.entities.Product;
@@ -37,9 +36,15 @@ public class ServiceImpl {
     public void createOrder(
             String customerFirstName,
             String customerLastName,
-            String customerPhoneNumber
+            String customerPhoneNumber,
+            String customerEmail
     ) {
-        ordersRepository.createOrder(customerFirstName, customerLastName, customerPhoneNumber);
+        ordersRepository.createOrder(
+                customerFirstName,
+                customerLastName,
+                customerPhoneNumber,
+                customerEmail
+        );
     }
 
     public Order getEditingOrder() {
@@ -63,13 +68,21 @@ public class ServiceImpl {
             Long id,
             String customerNewFirstName,
             String customerNewLastName,
-            String customerNewPhoneNumber
+            String customerNewPhoneNumber,
+            String customerNewEmail
     ) {
-        ordersRepository.updateOrderById(id, customerNewFirstName, customerNewLastName, customerNewPhoneNumber);
+        ordersRepository.updateOrderById(
+                id,
+                customerNewFirstName,
+                customerNewLastName,
+                customerNewPhoneNumber,
+                customerNewEmail
+        );
     }
     
     public void deleteOrderById(long id) {
-        ordersRepository.deleteOrderById(id);
+        Order order = ordersRepository.getOrderById(id);
+        ordersRepository.deleteOrder(order);
     }
     
     public List<Product> getAllProducts() {
@@ -78,7 +91,7 @@ public class ServiceImpl {
     
     public void createProduct(
             String productTitle,
-            float productPrice
+            BigDecimal productPrice
     ) {
         productsRepository.createProduct(productTitle, productPrice);
     }
@@ -100,7 +113,7 @@ public class ServiceImpl {
     public void updateProductById(
             Long id,
             String productNewTitle,
-            Float productNewPrice
+            BigDecimal productNewPrice
     ) {
         Product product = productsRepository.getProductById(id);
         product.setTitle(productNewTitle);
@@ -113,7 +126,7 @@ public class ServiceImpl {
         productsRepository.deleteProduct(product);
     }
 
-    public void addItemToOrder(
+    public void addOrderItemToOrder(
             long orderId,
             long productId,
             int productCount
@@ -121,8 +134,12 @@ public class ServiceImpl {
         Order order = ordersRepository.getOrderById(orderId);
         Product product = productsRepository.getProductById(productId);
         if (order != null && product != null && productCount > 0) {
-            ordersRepository.addItemToOrder(product, order, productCount);
+            ordersRepository.addOrderItemToOrder(product, order, productCount);
         }
     }
-
+    
+    public void deleteOrderItemById(Long id) {
+        OrderItem orderItem = ordersRepository.getOrderItemById(id);
+        ordersRepository.deleteOrderItem(orderItem);
+    }
 }

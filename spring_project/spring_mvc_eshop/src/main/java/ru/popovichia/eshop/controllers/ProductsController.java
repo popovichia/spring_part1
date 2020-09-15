@@ -1,5 +1,6 @@
 package ru.popovichia.eshop.controllers;
 
+import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,7 +27,7 @@ public class ProductsController {
     @PostMapping(path = "/createProduct")
     public String createProduct(
             @RequestParam(required = true) String productTitle,
-            @RequestParam(required = true) float productPrice
+            @RequestParam(required = true) BigDecimal productPrice
     ) {
         serviceImpl.createProduct(productTitle, productPrice);
         return "redirect:./";
@@ -49,7 +50,7 @@ public class ProductsController {
     public String updateProductById(
             @RequestParam(name = "id", required = true) Long id,
             @RequestParam(name = "productNewTitle", required = true) String productNewTitle,
-            @RequestParam(name = "productNewPrice", required = true) Float productNewPrice
+            @RequestParam(name = "productNewPrice", required = true) BigDecimal productNewPrice
     ) {
         serviceImpl.updateProductById(id, productNewTitle, productNewPrice);
         serviceImpl.setEditingProduct(null);
