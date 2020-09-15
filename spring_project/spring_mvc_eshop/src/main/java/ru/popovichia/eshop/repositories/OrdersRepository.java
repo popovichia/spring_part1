@@ -9,7 +9,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import ru.popovichia.eshop.entities.Customer;
 import ru.popovichia.eshop.entities.Order;
 import ru.popovichia.eshop.entities.OrderItem;
@@ -51,6 +50,23 @@ public class OrdersRepository {
         entityTransaction.begin();
         entityManager.persist(customer);
         entityManager.persist(order);
+        entityTransaction.commit();
+    }
+    
+    public void updateOrderById(
+            Long id,
+            String customerNewFirstName,
+            String customerNewLastName,
+            String customerNewPhoneNumber
+    ) {
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+        Order order = this.getOrderById(id);
+        Customer customer = order.getCustomer();
+        customer.setFirstName(customerNewFirstName);
+        customer.setLastName(customerNewLastName);
+        customer.setPhoneNumber(customerNewPhoneNumber);
+        entityTransaction.begin();
+        entityManager.persist(customer);
         entityTransaction.commit();
     }
     

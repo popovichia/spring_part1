@@ -1,6 +1,7 @@
 package ru.popovichia.eshop.entities;
 
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,7 +30,7 @@ public class Product {
     @Column(name = "price")
     private float price;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(cascade = { CascadeType.ALL }, mappedBy = "product")
     private List<OrderItem> listOrderItems;
 
     public Product() {

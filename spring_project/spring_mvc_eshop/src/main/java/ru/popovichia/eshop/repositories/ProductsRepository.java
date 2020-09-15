@@ -4,7 +4,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import ru.popovichia.eshop.entities.Product;
 
 /**
@@ -37,6 +36,20 @@ public class ProductsRepository {
                 .createQuery("from Product where id = :id", Product.class)
                 .setParameter("id", id)
                 .getSingleResult();
+    }
+
+    public void updateProduct(Product product) {
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+        entityTransaction.begin();
+        entityManager.persist(product);
+        entityTransaction.commit();
+    }
+    
+    public void deleteProduct(Product product) {
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+        entityTransaction.begin();
+        entityManager.remove(product);
+        entityTransaction.commit();
     }
     
 }

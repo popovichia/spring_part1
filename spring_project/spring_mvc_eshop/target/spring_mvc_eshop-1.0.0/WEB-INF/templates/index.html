@@ -21,7 +21,7 @@
                 <input style="height: 15px; width: 200px" name="customerLastName"/><br/>
                 <label>Телефон покупателя</label>
                 <input style="height: 15px; width: 200px" name="customerPhoneNumber"/><br/>
-                <button style="height: 25px; width: 150px" type="submit">Создать заказ</button>
+                <button style="height: 25px; width: 150px">Создать заказ</button>
             </form>
         </div>
         <div>
@@ -42,26 +42,26 @@
                         <td th:text="${order.customer.phoneNumber}"></td>
                         <td th:text="${order.orderDate}"></td>
                         <td>
-                            <form style="display: inline" th:action="@{./getOrderById?id={id}(id = ${order.id})}" th:method="PUT">
-                                <button style="height: 25px; width: 30px" type="submit">E</button>
+                            <form style="display: inline" th:action="@{./setEditingOrder?id={id}(id = ${order.id})}" th:method="POST">
+                                <button style="height: 25px; width: 30px">E</button>
                             </form>
                             <form style="display: inline" th:action="@{./deleteOrderById?id={id}(id = ${order.id})}" th:method="DELETE">
-                                <button style="height: 25px; width: 30px" type="submit">X</button>
+                                <button style="height: 25px; width: 30px">X</button>
                             </form>
                         </td>
                     </tr>    
                 </table>
             </div>
-            <div style="display: inline-block;" th:if="${order != null}">
+            <div style="display: inline-block;" th:if="${editingOrder != null}">
                 <h2>Редактирование заказа</h2>
-                <form style="display: inline" action="./updateOrderById" method="POST">
+                <form style="display: inline" th:action="@{./updateOrderById?id={id}(id = ${editingOrder.id})}" th:method="PUT">
                     <label>Имя покупателя</label>
-                    <input style="height: 15px; width: 200px" name="customerNewFirstName" th:value="${order.customer.firstName}"/><br/>
+                    <input style="height: 15px; width: 200px" name="customerNewFirstName" th:value="${editingOrder.customer.firstName}"/><br/>
                     <label>Фамилия покупателя</label>
-                    <input style="height: 15px; width: 200px" name="customerNewLastName" th:value="${order.customer.lastName}"/><br/>
+                    <input style="height: 15px; width: 200px" name="customerNewLastName" th:value="${editingOrder.customer.lastName}"/><br/>
                     <label>Телефон покупателя</label>
-                    <input style="height: 15px; width: 200px" name="customerNewPhoneNumber" th:value="${order.customer.phoneNumber}"/><br/>
-                    <button style="height: 25px; width: 150px" type="submit">Сохранить</button>
+                    <input style="height: 15px; width: 200px" name="customerNewPhoneNumber" th:value="${editingOrder.customer.phoneNumber}"/><br/>
+                    <button style="height: 25px; width: 150px">Сохранить</button>
                 </form>
             </div>
         </div>
@@ -74,7 +74,7 @@
                 <input style="height: 15px; width: 200px" name="productId"/><br/>
                 <label>Количество продукта</label>
                 <input style="height: 15px; width: 200px" name="productCount"/><br/>
-                <button style="height: 25px; width: 200px" type="submit">Добавить позицию в заказ</button>
+                <button style="height: 25px; width: 200px">Добавить позицию в заказ</button>
             </form>
         </div>
         <div>
@@ -102,22 +102,41 @@
                 <input style="height: 15px; width: 200px" name="productTitle"/><br/>
                 <label>Цена продукта</label>
                 <input style="height: 15px; width: 200px" name="productPrice"/><br/>
-                <button style="height: 25px; width: 200px" type="submit">Добавить продукт</button>
+                <button style="height: 25px; width: 200px">Добавить продукт</button>
             </form>
         </div>
-        <div>
+        <div style="display: inline-block;">
             <table>
                 <tr>
                     <th>Id продукта</th>
-                    <th>Наименование</th>
-                    <th>Цена</th>
+                    <th>Наименование продукта</th>
+                    <th>Цена продукта</th>
+                    <th></th>
                 </tr>
                 <tr th:each="product : ${listProducts}">
                     <td th:text="${product.id}"></td>
                     <td th:text="${product.title}"></td>
-                    <td th:text="${product.price}"></td>                    
+                    <td th:text="${product.price}"></td>
+                    <td>
+                        <form style="display: inline" th:action="@{./setEditingProduct?id={id}(id = ${product.id})}" th:method="POST">
+                            <button style="height: 25px; width: 30px">E</button>
+                        </form>
+                        <form style="display: inline" th:action="@{./deleteProductById?id={id}(id = ${product.id})}" th:method="DELETE">
+                            <button style="height: 25px; width: 30px">X</button>
+                        </form>
+                    </td>
                 </tr>    
             </table>
+        </div>
+        <div style="display: inline-block;" th:if="${editingProduct != null}">
+            <h2>Редактирование заказа</h2>
+            <form style="display: inline" th:action="@{./updateProductById?id={id}(id = ${editingProduct.id})}" th:method="PUT">
+                <label>Наименование продукта</label>
+                <input style="height: 15px; width: 200px" name="productNewTitle" th:value="${editingProduct.title}"/><br/>
+                <label>Цена продукта</label>
+                <input style="height: 15px; width: 200px" name="productNewPrice" th:value="${editingProduct.price}"/><br/>
+                <button style="height: 25px; width: 150px">Сохранить</button>
+            </form>
         </div>
     </body>
 </html>
