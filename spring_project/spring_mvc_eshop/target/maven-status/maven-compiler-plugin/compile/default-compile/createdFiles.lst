@@ -1,0 +1,14 @@
+ru\popovichia\eshop\DataBaseConfiguration.class
+ru\popovichia\eshop\entities\Customer.class
+ru\popovichia\eshop\entities\Product.class
+ru\popovichia\eshop\controllers\OrdersController.class
+ru\popovichia\eshop\WebInitializer.class
+ru\popovichia\eshop\repositories\ProductsRepository.class
+ru\popovichia\eshop\services\ServiceImpl.class
+ru\popovichia\eshop\entities\Order.class
+ru\popovichia\eshop\controllers\MainWebController.class
+ru\popovichia\eshop\controllers\TerminalController.class
+ru\popovichia\eshop\repositories\OrdersRepository.class
+ru\popovichia\eshop\controllers\ProductsController.class
+ru\popovichia\eshop\WebApplicationConfiguration.class
+ru\popovichia\eshop\entities\OrderItem.class
