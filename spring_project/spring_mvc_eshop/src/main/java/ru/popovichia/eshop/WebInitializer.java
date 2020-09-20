@@ -5,6 +5,7 @@
  */
 package ru.popovichia.eshop;
 
+import ru.popovichia.eshop.configurations.WebApplicationConfiguration;
 import javax.servlet.Filter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;

@@ -1,68 +1,91 @@
 package ru.popovichia.eshop.controllers;
 
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.popovichia.eshop.entities.Customer;
 import ru.popovichia.eshop.entities.Order;
-import ru.popovichia.eshop.services.ServiceImpl;
+import ru.popovichia.eshop.services.DataService;
 
 @Controller
 @RequestMapping(path = "/")
 public class OrdersController {
     
     @Autowired
-    private ServiceImpl serviceImpl;
+    private DataService dataService;
     
-    @PostMapping(path = "/createOrder")
-    public String createOrder(
-            @RequestParam(name = "customerFirstName", required = true) String customerFirstName,
-            @RequestParam(name = "customerLastName", required = true) String customerLastName,
-            @RequestParam(name = "customerPhoneNumber", required = true) String customerPhoneNumber,
-            @RequestParam(name = "customerEmail", required = true) String customerEmail
+    @GetMapping(path = "/getAllOrders")
+    public String getAllOrders(Model model) {
+        model.addAttribute("listOrders", dataService.getAllOrders());
+        return "orders";
+    }
+
+    @GetMapping(path = "/getOrderById")
+    public String getOrderById(
+            Model model,
+            @RequestParam(name = "id", required = false) Long id
     ) {
-        serviceImpl.createOrder(
-                customerFirstName,
-                customerLastName,
-                customerPhoneNumber,
-                customerEmail
-        );
-        return "redirect:./";
+        Order order;
+        Customer customer;
+        if (id != null) {
+            order = dataService.getOrderById(id);
+            customer = order.getCustomer();
+        } else {
+            order = new Order();
+            customer = new Customer();
+            order.setCustomer(customer);
+        }
+        model.addAttribute("orderId", order.getId());
+        model.addAttribute("customer", order.getCustomer());
+        return "order";
+    }
+
+    @PostMapping(path = "/saveOrderById")
+    public String saveOrderById(
+            Model model,
+            @RequestParam(name = "id", required = true) Long id,
+            @Valid Customer customer,
+            BindingResult bindingResult
+    ) {
+        model.addAttribute("orderId", id);
+        if (bindingResult.hasErrors()) {
+            return "order";
+        }
+        dataService.saveOrderById(id, customer);
+        return "redirect:/getAllOrders";
     }
     
     @PostMapping(path = "/setEditingOrder")
     public String setEditingOrder(
             @RequestParam(name = "id", required = true) Long id
     ) {
-        serviceImpl.setEditingOrder(id);
+        dataService.setEditingOrder(id);
         return "redirect:./";
     }
     
     @GetMapping(path = "/getEditingOrder")
     public Order getEditingOrder() {
-        return serviceImpl.getEditingOrder();
+        return dataService.getEditingOrder();
     }
     
-    @PutMapping(path = "/updateOrderById")
-    public String updateOrderById(
+    @GetMapping(path = "/editOrderById")
+    public String editOrderById(
             @RequestParam(name = "id", required = true) Long id,
-            @RequestParam(name = "customerNewFirstName", required = true) String customerNewFirstName,
-            @RequestParam(name = "customerNewLastName", required = true) String customerNewLastName,
-            @RequestParam(name = "customerNewPhoneNumber", required = true) String customerNewPhoneNumber,
-            @RequestParam(name = "customerNewEmail", required = true) String customerNewEmail
+            @Valid Order editingOrder,
+            BindingResult bindingResult
     ) {
-        serviceImpl.updateOrderById(
-                id,
-                customerNewFirstName,
-                customerNewLastName,
-                customerNewPhoneNumber,
-                customerNewEmail
-        );
-        serviceImpl.setEditingOrder(null);
+        if (bindingResult.hasErrors()) {
+            return "index";
+        }
+        dataService.updateOrderById(id, editingOrder);
+        dataService.setEditingOrder(null);
         return "redirect:./";
     }
     
@@ -72,7 +95,7 @@ public class OrdersController {
             @RequestParam(required = true) Long productId,
             @RequestParam(required = true) int productCount
     ) {
-        serviceImpl.addOrderItemToOrder(orderId, productId, productCount);
+        dataService.addOrderItemToOrder(orderId, productId, productCount);
         return "redirect:./";
     }
     
@@ -80,7 +103,7 @@ public class OrdersController {
     public String deleteOrderById(
             @RequestParam(name = "id", required = true) Long id
     ) {        
-        serviceImpl.deleteOrderById(id);
+        dataService.deleteOrderById(id);
         return "redirect:./";
     }
     
@@ -88,7 +111,7 @@ public class OrdersController {
     public String deleteOrderItemById(
             @RequestParam(name = "id", required = true) Long id
     ) {
-        serviceImpl.deleteOrderItemById(id);
+        dataService.deleteOrderItemById(id);
         return "redirect:./";
     }
 

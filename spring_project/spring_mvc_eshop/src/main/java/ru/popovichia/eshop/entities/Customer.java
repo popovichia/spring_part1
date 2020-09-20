@@ -39,7 +39,7 @@ public class Customer {
 
     @NotBlank
     @NotNull        
-    @Column(name = "phoneNumber")
+    @Column(name = "phone_number")
     private String phoneNumber;
     
     @NotBlank
@@ -52,13 +52,6 @@ public class Customer {
     private List<Order> listOrders;
 
     public Customer() {
-    }
-
-    public Customer(String firstName, String lastName, String phoneNumber, String email) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
     }
 
     public long getId() {

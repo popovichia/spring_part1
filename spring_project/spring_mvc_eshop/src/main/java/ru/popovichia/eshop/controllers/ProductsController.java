@@ -1,8 +1,11 @@
 package ru.popovichia.eshop.controllers;
 
 import java.math.BigDecimal;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,7 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.popovichia.eshop.entities.Product;
-import ru.popovichia.eshop.services.ServiceImpl;
+import ru.popovichia.eshop.services.DataService;
 
 /**
  *
@@ -22,28 +25,41 @@ import ru.popovichia.eshop.services.ServiceImpl;
 public class ProductsController {
     
     @Autowired
-    private ServiceImpl serviceImpl;
+    private DataService dataService;
     
-    @PostMapping(path = "/createProduct")
-    public String createProduct(
-            @RequestParam(required = true) String productTitle,
-            @RequestParam(required = true) BigDecimal productPrice
+    @GetMapping(path = "getAllProducts")
+    public String getAllProducts(
+            Model model,
+            @RequestParam(name = "id", required = false) Long id
     ) {
-        serviceImpl.createProduct(productTitle, productPrice);
-        return "redirect:./";
+        model.addAttribute("product", dataService.getProductById(id));
+        model.addAttribute("listProducts", dataService.getAllProducts());
+        return "products";
+    }
+
+    @PostMapping(path = "/saveProduct")
+    public String createProduct(
+            @Valid Product product,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasErrors()) {
+            return "products";
+        }
+        dataService.saveProduct(product);
+        return "redirect:./getAllProducts";
     }
     
     @PostMapping(path = "/setEditingProduct")
     public String setEditingProduct(
             @RequestParam(required = true) Long id
     ) {
-        serviceImpl.setEditingProduct(id);
+        dataService.setEditingProduct(id);
         return "redirect:./";
     }
 
     @GetMapping(path = "/getEditingProduct")
     public Product getEditingProduct() {
-        return serviceImpl.getEditingProduct();
+        return dataService.getEditingProduct();
     }
     
     @PutMapping(path = "/updateProductById")
@@ -52,8 +68,8 @@ public class ProductsController {
             @RequestParam(name = "productNewTitle", required = true) String productNewTitle,
             @RequestParam(name = "productNewPrice", required = true) BigDecimal productNewPrice
     ) {
-        serviceImpl.updateProductById(id, productNewTitle, productNewPrice);
-        serviceImpl.setEditingProduct(null);
+        dataService.updateProductById(id, productNewTitle, productNewPrice);
+        dataService.setEditingProduct(null);
         return "redirect:./";
     }
 
@@ -61,7 +77,7 @@ public class ProductsController {
     public String deleteProductById(
             @RequestParam(name = "id", required = true) Long id
     ) {
-        serviceImpl.deleteProductById(id);
+        dataService.deleteProductById(id);
         return "redirect:./";
     }
 

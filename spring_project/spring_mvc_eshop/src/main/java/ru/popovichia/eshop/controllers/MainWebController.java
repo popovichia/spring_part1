@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.popovichia.eshop.services.ServiceImpl;
+import org.springframework.web.bind.annotation.RequestParam;
+import ru.popovichia.eshop.services.DataService;
 
 /**
  *
@@ -20,18 +22,23 @@ public class MainWebController {
     private final Logger LOGGER = Logger.getLogger(this.getClass());
 
     @Autowired
-    private ServiceImpl serviceImpl;
+    private DataService dataService;
     
     @GetMapping(path = "")
     public String getIndex(
             Model model
     ) {
-        model.addAttribute("listOrders", serviceImpl.getAllOrders());        
-        model.addAttribute("editingOrder", serviceImpl.getEditingOrder());
-        model.addAttribute("listOrdersItems", serviceImpl.getAllOrdersItems());
-        model.addAttribute("listProducts", serviceImpl.getAllProducts());
-        model.addAttribute("editingProduct", serviceImpl.getEditingProduct());
+        model.addAttribute("listOrdersItems", dataService.getAllOrdersItems());
         return "index";
     }
     
+    @PostMapping(path = "")
+    public String postIndex(
+            Model model,
+            @RequestParam(name = "inputStringPattern", required = true) String inputStringPattern
+    ) {
+        model.addAttribute("listOrdersItems", dataService.getOrdersByPattern(inputStringPattern));
+        return "index";
+    }
+
 }

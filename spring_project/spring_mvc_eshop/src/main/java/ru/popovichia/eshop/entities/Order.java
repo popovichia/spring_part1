@@ -38,11 +38,11 @@ public class Order {
     private List<OrderItem> listOrderItems; 
     
     public Order() {
+        this.orderDate = new Date();
     }
 
     public Order(Customer customer) {
         this.customer = customer;
-        this.orderDate = new Date();
     }
 
     public long getId() {
@@ -67,6 +67,7 @@ public class Order {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+        this.orderDate = new Date();
     }
 
     public List<OrderItem> getListOrderItems() {

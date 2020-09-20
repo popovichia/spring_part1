@@ -1,0 +1,94 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="windows-1251"/>
+        <title>Интернет-магазин</title>
+        <style>
+            table, th, td {
+                border: 1px solid black;
+            }
+            input {
+                height: 15px;
+                width: 100px;
+            }
+            button {
+                height: 25px;
+                width: 150px;
+            }
+            button.big {
+                height: 25px;
+                width: 200px;
+            }
+            button.small {
+                font: bold 15px Arial;
+                text-decoration: none;
+                background-color: #EEEEEE;
+                color: #333333;
+                padding: 2px 6px 2px 6px;
+                border-top: 1px solid #CCCCCC;
+                border-right: 1px solid #333333;
+                border-bottom: 1px solid #333333;
+                border-left: 1px solid #CCCCCC;
+                width: 25px;
+            }
+            label.error {
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Интернет-магазин</h1>
+        <form action="./getAllOrders" method="GET">
+            <button class="big">На страницу заказов</button>
+        </form>
+        <h2>Заказ <label th:text="${orderId}"/></h2>
+        <form th:action="@{./saveOrderById?id={id}(id = ${orderId})}" th:method="POST" th:object="${customer}">
+            <label>Имя покупателя</label>
+            <input name="firstName" th:value="*{firstName}"/>
+            <label class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"/><br/>
+            <label>Фамилия покупателя</label>
+            <input name="lastName" th:value="*{lastName}"/>
+            <label class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"/><br/>
+            <label>Телефон покупателя</label>
+            <input name="phoneNumber" th:value="*{phoneNumber}"/>
+            <label class="error" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"/><br/>
+            <label>E-mail покупателя</label>
+            <input name="email" th:value="*{email}"/>
+            <label class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"/><br/>
+            <button>Сохранить</button>
+        </form>
+        <h2>Состав заказа/></h2>
+        <div>
+            <form action="./addOrderItemToOrder" method="POST">
+                <label>Id продукта</label>
+                <input name="productId"/><br/>
+                <label>Количество продукта</label>
+                <input name="productCount"/><br/>
+                <button class="big">Добавить позицию в заказ</button>
+            </form>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <th>Идентификатор позиции</th>
+                    <th>Наименование продукта</th>
+                    <th>Количество продукта</th>
+                    <th>Цена позиции</th>
+                    <th></th>
+                </tr>
+                <tr  th:each="orderItem : ${listOrdersItems}">
+                    <td th:text="${orderItem.id}"></td>
+                    <td th:text="${orderItem.product.title}"></td>
+                    <td th:text="${orderItem.productCount}"></td>
+                    <td th:text="${orderItem.productPrice}"></td>
+                    <td>
+                        <form style="display: inline" th:action="@{./deleteOrderItemById?(id = ${orderItem.id})}" th:method="DELETE">
+                            <button  class="small">X</button>
+                        </form>                        
+                    </td>
+                </tr>    
+            </table>
+        </div>
+    </body>
+</html>

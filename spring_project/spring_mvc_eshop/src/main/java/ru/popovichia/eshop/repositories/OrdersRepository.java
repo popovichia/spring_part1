@@ -6,119 +6,19 @@
 package ru.popovichia.eshop.repositories;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import org.springframework.beans.factory.annotation.Autowired;
-import ru.popovichia.eshop.entities.Customer;
+import org.springframework.stereotype.Repository;
 import ru.popovichia.eshop.entities.Order;
-import ru.popovichia.eshop.entities.OrderItem;
-import ru.popovichia.eshop.entities.Product;
 
 /**
  *
  * @author Igor Popovich, email: popovichia@gmail.com, phone: +7 913 902 36 36,
  * company: mts.ru
  */
-public class OrdersRepository {
+@Repository
+public interface OrdersRepository extends org.springframework.data.repository.Repository<Order, Long> {
     
-    @Autowired
-    private EntityManager entityManager;
-    
-    public OrdersRepository() {
-    }
+    public List<Order> findAll();
+    public Order findById(Long id);
+    public void save(Order order);
 
-    public List<Order> getAllOrders() {
-        return entityManager
-                .createQuery("from Order")
-                .getResultList();
-    }
-
-    public List<OrderItem> getAllOrdersItems() {
-        return entityManager
-                .createQuery("from OrderItem")
-                .getResultList();
-    }
-        
-    public void createOrder(
-            String customerFirstName,
-            String customerLastName,
-            String customerPhoneNumber,
-            String customerEmail
-    ) {
-        EntityTransaction entityTransaction = entityManager.getTransaction();
-        Customer customer = new Customer(
-                customerFirstName,
-                customerLastName,
-                customerPhoneNumber,
-                customerEmail
-        );
-        Order order = new Order(customer);
-        entityTransaction.begin();
-        entityManager.persist(customer);
-        entityManager.persist(order);
-        entityTransaction.commit();
-    }
-    
-    public void updateOrderById(
-            Long id,
-            String customerNewFirstName,
-            String customerNewLastName,
-            String customerNewPhoneNumber,
-            String customerNewEmail
-    ) {
-        EntityTransaction entityTransaction = entityManager.getTransaction();
-        Order order = this.getOrderById(id);
-        Customer customer = order.getCustomer();
-        customer.setFirstName(customerNewFirstName);
-        customer.setLastName(customerNewLastName);
-        customer.setPhoneNumber(customerNewPhoneNumber);
-        entityTransaction.begin();
-        entityManager.persist(customer);
-        entityTransaction.commit();
-    }
-    
-    public void deleteOrder(Order order) {
-        EntityTransaction entityTransaction = entityManager.getTransaction();
-        entityTransaction.begin();
-        entityManager.remove(order);
-        entityTransaction.commit();
-    }
-    
-    public Order getOrderById(long id) {
-        return entityManager
-                .createQuery("from Order where id = :id", Order.class)
-                .setParameter("id", id)
-                .getSingleResult();
-    }
-    
-    public OrderItem getOrderItemById(Long id) {
-        return entityManager
-                .createQuery("from OrderItem where id = :id", OrderItem.class)
-                .setParameter("id", id)
-                .getSingleResult();
-    }
-    
-    public void addOrderItemToOrder(
-            Product product,
-            Order order,
-            int productCount
-    ) {
-        EntityTransaction entityTransaction = entityManager.getTransaction();
-        OrderItem orderItem = new OrderItem();
-        orderItem.setOrder(order);
-        orderItem.setProduct(product);
-        orderItem.setProductCount(productCount);
-        orderItem.setProductPrice(product.getPrice());
-        entityTransaction.begin();
-        entityManager.persist(orderItem);
-        entityTransaction.commit();
-    }
-
-    public void deleteOrderItem(OrderItem orderItem) {
-        EntityTransaction entityTransaction = entityManager.getTransaction();
-        entityTransaction.begin();
-        entityManager.remove(orderItem);
-        entityTransaction.commit();
-    }
-    
 }

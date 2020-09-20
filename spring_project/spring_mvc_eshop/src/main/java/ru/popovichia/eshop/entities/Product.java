@@ -10,6 +10,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -25,9 +28,13 @@ public class Product {
     @Column(name = "id")
     private long id;
 
+    @NotBlank
+    @NotNull
     @Column(name = "title")
     private String title;
 
+    @NotNull
+    @Digits(fraction = 2, integer = 6)
     @Column(name = "price")
     private BigDecimal price;
 

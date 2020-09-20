@@ -9,6 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -28,9 +31,13 @@ public class OrderItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @NotNull
+    @Digits(fraction = 0, integer = 6)
     @Column(name = "product_count")
     private int productCount;
-    
+
+    @NotNull
+    @Digits(fraction = 2, integer = 6)    
     @Column(name = "product_price")
     private BigDecimal productPrice;
 
