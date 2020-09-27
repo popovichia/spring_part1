@@ -1,0 +1,46 @@
+/* 
+    Created on : 21.09.2020, 15:40:00
+    Author     : Igor Popovich, email: iapopo17@mts.ru, phone: +7 913 902 36 36, company: mts.ru
+*/
+
+table, th, td {
+    border: 1px solid black;
+}
+input {
+    height: 15px;
+    width: 200px;
+}
+input.small {
+    height: 15px;
+    width: 20px;
+}
+a.button {
+    text-decoration: none;
+    background-color: #EEEEEE;
+    color: #333333;
+    padding: 2px 6px 2px 6px;
+    border-top: 1px solid #CCCCCC;
+    border-right: 1px solid #333333;
+    border-bottom: 1px solid #333333;
+    border-left: 1px solid #CCCCCC;
+}
+button {
+    height: 25px;
+    width: 150px;
+}
+button.big {
+    height: 25px;
+    width: 200px;
+}
+button.small {
+    height: 25px;
+    width: 35px;                
+}
+label.error {
+    color: red;
+}
+li {
+    border: 2px solid black;
+    display: inline-flex;
+    list-style: none;
+}

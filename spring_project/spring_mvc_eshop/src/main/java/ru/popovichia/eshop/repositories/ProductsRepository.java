@@ -15,5 +15,6 @@ public interface ProductsRepository extends org.springframework.data.repository.
     public List<Product> findAll();
     public Product findById(Long id);
     public void save(Product product);
+    public void deleteById(Long id);
     
 }

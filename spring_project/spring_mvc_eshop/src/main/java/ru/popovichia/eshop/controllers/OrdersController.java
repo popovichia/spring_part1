@@ -18,13 +18,15 @@ import ru.popovichia.eshop.services.DataService;
 @RequestMapping(path = "/")
 public class OrdersController {
     
+    private final static String ORDERS_VIEWS_DIR = "/orders/";
+    
     @Autowired
     private DataService dataService;
     
     @GetMapping(path = "/getAllOrders")
     public String getAllOrders(Model model) {
         model.addAttribute("listOrders", dataService.getAllOrders());
-        return "orders";
+        return ORDERS_VIEWS_DIR + "orders";
     }
 
     @GetMapping(path = "/getOrderById")
@@ -32,9 +34,9 @@ public class OrdersController {
             Model model,
             @RequestParam(name = "id", required = false) Long id
     ) {
-        Order order;
-        Customer customer;
-        if (id != null) {
+        Order order = null;
+        Customer customer = null;
+        if (id != null && id > 0) {
             order = dataService.getOrderById(id);
             customer = order.getCustomer();
         } else {
@@ -44,75 +46,50 @@ public class OrdersController {
         }
         model.addAttribute("orderId", order.getId());
         model.addAttribute("customer", order.getCustomer());
-        return "order";
+        model.addAttribute("listOrderItems", order.getListOrderItems());
+        return ORDERS_VIEWS_DIR + "order";
     }
 
     @PostMapping(path = "/saveOrderById")
     public String saveOrderById(
             Model model,
-            @RequestParam(name = "id", required = true) Long id,
+            @RequestParam(name = "id", required = false) Long id,
             @Valid Customer customer,
             BindingResult bindingResult
     ) {
         model.addAttribute("orderId", id);
         if (bindingResult.hasErrors()) {
-            return "order";
+            return ORDERS_VIEWS_DIR + "order";
         }
         dataService.saveOrderById(id, customer);
         return "redirect:/getAllOrders";
     }
-    
-    @PostMapping(path = "/setEditingOrder")
-    public String setEditingOrder(
-            @RequestParam(name = "id", required = true) Long id
-    ) {
-        dataService.setEditingOrder(id);
-        return "redirect:./";
-    }
-    
-    @GetMapping(path = "/getEditingOrder")
-    public Order getEditingOrder() {
-        return dataService.getEditingOrder();
-    }
-    
-    @GetMapping(path = "/editOrderById")
-    public String editOrderById(
-            @RequestParam(name = "id", required = true) Long id,
-            @Valid Order editingOrder,
-            BindingResult bindingResult
-    ) {
-        if (bindingResult.hasErrors()) {
-            return "index";
-        }
-        dataService.updateOrderById(id, editingOrder);
-        dataService.setEditingOrder(null);
-        return "redirect:./";
-    }
-    
-    @PostMapping(path = "/addOrderItemToOrder")
-    public String addOrderItemToOrder(
-            @RequestParam(required = true) Long orderId,
-            @RequestParam(required = true) Long productId,
-            @RequestParam(required = true) int productCount
-    ) {
-        dataService.addOrderItemToOrder(orderId, productId, productCount);
-        return "redirect:./";
-    }
-    
+        
     @DeleteMapping(path = "/deleteOrderById")
     public String deleteOrderById(
             @RequestParam(name = "id", required = true) Long id
     ) {        
         dataService.deleteOrderById(id);
-        return "redirect:./";
+        return "redirect:./getAllOrders";
+    }
+    
+    @PostMapping(path = "/addOrderItemToOrder")
+    public String addOrderItemToOrder(
+            @RequestParam(name = "orderId", required = true) Long orderId,
+            @RequestParam(name = "productId", required = true) Long productId,
+            @RequestParam(name = "productCount", required = true) Integer productCount
+    ) {
+        dataService.addOrderItemToOrder(orderId, productId, productCount);
+        return "redirect:./getOrderById?id=" + orderId;
     }
     
     @DeleteMapping(path = "/deleteOrderItemById")
     public String deleteOrderItemById(
             @RequestParam(name = "id", required = true) Long id
     ) {
+        Order order = dataService.getOrderById(id);
         dataService.deleteOrderItemById(id);
-        return "redirect:./";
+        return "redirect:./getOrderById?id=" + order.getId();
     }
 
 }

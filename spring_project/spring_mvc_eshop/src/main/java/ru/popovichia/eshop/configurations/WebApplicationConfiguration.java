@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -19,30 +20,41 @@ public class WebApplicationConfiguration implements WebMvcConfigurer {
     
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry resourceHandlerRegistry) {
-        resourceHandlerRegistry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+        resourceHandlerRegistry
+                .addResourceHandler("/css/*")
+                .addResourceLocations("classpath:/css/");
     }
     
     @Bean(name = "templateResolver")
-    public SpringResourceTemplateResolver getTemplateResolver() {
-        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-        templateResolver.setPrefix("/WEB-INF/templates/");
-        templateResolver.setSuffix(".html");
-        return templateResolver;
+    public SpringResourceTemplateResolver getSpringResourceTemplateResolver() {
+        SpringResourceTemplateResolver springResourceTemplateResolver
+                = new SpringResourceTemplateResolver();
+        springResourceTemplateResolver.setPrefix("/WEB-INF/views/");
+        springResourceTemplateResolver.setSuffix(".html");
+        return springResourceTemplateResolver;
     }
 
     @Bean(name = "templateEngine")
-    public SpringTemplateEngine getTemplateEngine() {
-        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        templateEngine.setTemplateResolver(getTemplateResolver());
-        return templateEngine;
+    public SpringTemplateEngine getSpringTemplateEngine() {
+        SpringTemplateEngine springTemplateEngine = new SpringTemplateEngine();
+        springTemplateEngine.setTemplateResolver(getSpringResourceTemplateResolver());
+        return springTemplateEngine;
     }
 
     @Bean(name = "thymeleafViewResolver")
     public ThymeleafViewResolver getThymeleafViewResolver() {
         ThymeleafViewResolver thymeleafViewResolver = new ThymeleafViewResolver();
-        thymeleafViewResolver.setTemplateEngine(getTemplateEngine());
+        thymeleafViewResolver.setTemplateEngine(getSpringTemplateEngine());
         thymeleafViewResolver.setCharacterEncoding("UTF-8");
         return thymeleafViewResolver;
+    }
+
+    @Bean(name = "messageSource")
+    public ResourceBundleMessageSource getResourceBundleMessageSource() {
+        ResourceBundleMessageSource resourceBundleMessageSource
+                = new ResourceBundleMessageSource();
+        resourceBundleMessageSource.setBasename("uitext");
+        return resourceBundleMessageSource;
     }
     
 }

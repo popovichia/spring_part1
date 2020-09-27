@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="windows-1251"/>
+        <title th:text="#{htmlpage.orders.title}">Интернет-магазин.тест</title>
+        <link rel="stylesheet" type="text/css" href="../tmp/main.css" th:href="@{./css/main.css}" media="screen"/>
+    </head>
+    <body>
+        <h1 th:text="#{htmlpage.orders.h1}">Интернет-магазин.тест</h1>
+        <form action="./" method="GET">
+            <button class="big">На главную страницу</button>
+        </form>
+        <form action="./getOrderById" method="GET">
+            <button>Добавить заказ</button>
+        </form>
+        <h2>Список всех заказов</h2>
+        <div>
+            <div>
+                <table>
+                    <tr>
+                        <th>Идентификатор заказа</th>
+                        <th>Имя покупателя</th>
+                        <th>Фамилия покупателя</th>
+                        <th>Телефон покупателя</th>
+                        <th>E-mail покупателя</th>
+                        <th>Дата заказа</th>
+                        <th></th>
+                    </tr>
+                    <tr th:each="order : ${listOrders}">
+                        <td th:text="${order.id}"></td>
+                        <td th:text="${order.customer.firstName}"></td>
+                        <td th:text="${order.customer.lastName}"></td>
+                        <td th:text="${order.customer.phoneNumber}"></td>
+                        <td th:text="${order.customer.email}"></td>
+                        <td th:text="${order.orderDate}"></td>
+                        <td>
+                            <a class="button" style="display: inline" th:href="@{./getOrderById(id = ${order.id})}">E</a>
+                            <form style="display: inline" th:action="@{./deleteOrderById(id = ${order.id})}" th:method="delete">
+                                <button class="small">X</button>
+                            </form>
+                        </td>
+                    </tr>    
+                </table>
+            </div>
+        </div>
+    </body>
+</html>
