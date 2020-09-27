@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.popovichia.eshop.services.DataService;
@@ -20,25 +19,45 @@ import ru.popovichia.eshop.services.DataService;
 public class MainWebController {
     
     private final Logger LOGGER = Logger.getLogger(this.getClass());
+    private Integer pageSize = 5;
 
     @Autowired
     private DataService dataService;
     
     @GetMapping(path = "")
-    public String getIndex(
-            Model model
+    public String getMain(
+            Model model,
+            @RequestParam(name = "pageIndex", required = false) Integer pageIndex,
+            @RequestParam(name = "pageSize", required = false) Integer pageSize
     ) {
-        model.addAttribute("listOrdersItems", dataService.getAllOrdersItems());
+        if (pageSize != null && pageSize > 0) {
+            this.setPageSize(pageSize);
+        }
+        pageIndex = pageIndex == null ? 1 : pageIndex;
+        model.addAttribute("listOrdersItems", dataService.getAllOrdersItems(pageIndex, this.pageSize));
+        model.addAttribute("pagesCount", dataService.getOrdersItemsPagesCount(this.pageSize));
+        model.addAttribute("rowsCount", dataService.getOrdersItemsCount());
+        model.addAttribute("pageSize", this.pageSize);
         return "index";
     }
     
-    @PostMapping(path = "")
-    public String postIndex(
+    @GetMapping(path = "/searchByStringPattern")
+    public String searchByStringPattern(
             Model model,
-            @RequestParam(name = "inputStringPattern", required = true) String inputStringPattern
+            @RequestParam(name = "inputStringPattern", required = false) String inputStringPattern
     ) {
-        model.addAttribute("listOrdersItems", dataService.getOrdersByPattern(inputStringPattern));
+        if (inputStringPattern.isEmpty()) {
+            return "redirect:./";
+        }
+        model.addAttribute("listOrdersItems", dataService.getOrdersItemsLikePattern(inputStringPattern));
+        model.addAttribute("pagesCount", dataService.getOrdersItemsPagesCount(this.pageSize));
+        model.addAttribute("rowsCount", dataService.getOrdersItemsCount());
+        model.addAttribute("pageSize", this.pageSize);
         return "index";
     }
-
+    
+    private void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+    
 }

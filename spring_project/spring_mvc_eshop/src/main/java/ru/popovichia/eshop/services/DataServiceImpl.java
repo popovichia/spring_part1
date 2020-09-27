@@ -1,17 +1,23 @@
 package ru.popovichia.eshop.services;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.popovichia.eshop.entities.Customer;
 import ru.popovichia.eshop.entities.Order;
 import ru.popovichia.eshop.entities.OrderItem;
 import ru.popovichia.eshop.entities.Product;
 import ru.popovichia.eshop.repositories.CustomersRepository;
+import ru.popovichia.eshop.repositories.CustomersRepositoryPaS;
 import ru.popovichia.eshop.repositories.OrdersItemsRepository;
 import ru.popovichia.eshop.repositories.OrdersRepository;
 import ru.popovichia.eshop.repositories.ProductsRepository;
+import ru.popovichia.eshop.repositories.OrdersItemsRepositoryPaS;
 
 /**
  *
@@ -22,8 +28,13 @@ import ru.popovichia.eshop.repositories.ProductsRepository;
 @Service
 public class DataServiceImpl implements DataService {
     
+    private final Logger LOGGER = Logger.getLogger(this.getClass());
+    
     @Autowired
     private OrdersRepository ordersRepository;
+    
+    @Autowired
+    private OrdersItemsRepositoryPaS ordersItemsRepositoryPagination;
 
     @Autowired
     private ProductsRepository productsRepository;
@@ -34,6 +45,9 @@ public class DataServiceImpl implements DataService {
     @Autowired
     private CustomersRepository customersRepository;
     
+    @Autowired
+    private CustomersRepositoryPaS customersRepositoryPaS;
+
     private Order editingOrder;
     private Product editingProduct;
     
@@ -41,30 +55,9 @@ public class DataServiceImpl implements DataService {
         return ordersRepository.findAll();
     }
 
-    public List<OrderItem> getAllOrdersItems() {
-        return ordersItemsRepository.findAll();
-    }
-
-    public List<Order> getOrdersByPattern(String inputStringPattern) {
-        return null;
-    }
-
     public Order getOrderById(Long id) {
         return ordersRepository.findById(id);
-    }
-    
-    public Product getProductById(Long id) {
-        
-        Product product = null;
-        if (id != null) {
-            product = productsRepository.findById(id);
-        }
-        if (product == null) {
-            product = new Product();
-        }
-        return product;
-    
-    }
+    }    
 
     public void saveOrderById(Long id, Customer customer) {
         
@@ -78,64 +71,107 @@ public class DataServiceImpl implements DataService {
 
     }
 
-    public Order getEditingOrder() {
-        return editingOrder;
+    public void deleteOrderById(Long id) {
+        ordersRepository.deleteById(id);
     }
 
-    public void setEditingOrder(Long id) {
-        if (id != null) {
-            this.editingOrder = this.getOrderById(id);
-        } else {
-            this.editingOrder = null;
-        }
-    }
-    
-    public void updateOrderById(Long id, Order newOrder) {
-    }
-    
-    public void deleteOrderById(long id) {
-    }
-    
     public List<Product> getAllProducts() {
         return productsRepository.findAll();
     }
-    
-    public void saveProduct(Product product) {
-        
-        productsRepository.save(product);
-        
-    }
 
-    public void setEditingProduct(
-            Long id            
-    ) {
+    public Product getProductById(Long id) {
+        
+        Product product = null;
         if (id != null) {
+            product = productsRepository.findById(id);
+        }
+        if (product == null) {
+            product = new Product();
+        }
+        return product;
+    
+    }    
+    
+    public void saveProductById(Long id, Product product) {
+        Product productInDb = null;
+        if (id != null) {
+            productInDb = productsRepository.findById(id);
+        }
+        if (productInDb != null) {
+            productInDb.setTitle(product.getTitle());
+            productInDb.setPrice(product.getPrice());
+            productsRepository.save(productInDb);
         } else {
-            this.editingProduct = null;
+            productsRepository.save(product);
         }
     }
 
-    public Product getEditingProduct() {
-        return editingProduct;
-    }    
-
-    public void updateProductById(
-            Long id,
-            String productNewTitle,
-            BigDecimal productNewPrice
-    ) {
+    public void deleteProductById(Long id) {
+        productsRepository.deleteById(id);
     }
-    
-    public void deleteProductById(long id) {
+
+    public List<OrderItem> getAllOrdersItems() {
+
+        return ordersItemsRepository.findAll();
+
+    }
+
+    public List<OrderItem> getAllOrdersItems(Integer pageIndex, Integer pageSize) {
+        
+        Pageable pageable = PageRequest.of((pageIndex - 1), pageSize);
+        return ordersItemsRepositoryPagination.findAll(pageable).toList();
+
     }
 
     public void addOrderItemToOrder(
-            long orderId,
-            long productId,
-            int productCount
+            Long orderId,
+            Long productId,
+            Integer productCount
     ) {
+        Product product = productsRepository.findById(productId);
+        Order order = ordersRepository.findById(orderId);
+        if (order != null && product != null && productCount > 0) {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setProduct(product);
+            orderItem.setProductPrice(product.getPrice());
+            orderItem.setProductCount(productCount);
+            orderItem.setOrder(order);
+            ordersItemsRepository.save(orderItem);
+        }
+    }
+    
+    public Integer getOrdersItemsPagesCount(Integer onePageScope) {
+        Integer rowsCount = ordersItemsRepository.getRowsCount();
+        Integer pagesCount = 1;
+        if (rowsCount != null && rowsCount > 0) {
+            pagesCount = rowsCount / onePageScope + (rowsCount % onePageScope > 0 ? 1 : 0);
+        }
+        return pagesCount;
+    }
+
+    public Integer getOrdersItemsCount() {
+        return ordersItemsRepository.getRowsCount();
     }
     
     public void deleteOrderItemById(Long id) {
+        ordersItemsRepository.deleteById(id);
     }
+
+    public List<Customer> getAllCustomersSortedByFullNameAsc() {
+        
+        return customersRepositoryPaS.findAll(
+                Sort.by("lastName").ascending()
+                .and(Sort.by("firstName").ascending())
+        );
+    }
+    
+    public List<OrderItem> getOrdersItemsLikePattern(String inputStringPattern) {
+        List<OrderItem> resultListOrdersItems = new ArrayList<>();
+        resultListOrdersItems
+                .addAll(ordersItemsRepository.findLikeOrder(inputStringPattern));
+        resultListOrdersItems
+                .addAll(ordersItemsRepository.findLikeProduct(inputStringPattern));
+        return resultListOrdersItems;
+    }
+
 }

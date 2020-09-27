@@ -1,0 +1,191 @@
+                    <td>
+                        <form style="display: inline" th:action="@{./editOrderById?id={id}(id = ${order.id})}" th:method="GET">
+                            <button  class="small">E</button>
+                        </form>                        
+                        <form style="display: inline" th:action="@{./deleteOrderItemById?id={id}(id = ${orderItem.id})}" th:method="DELETE">
+                            <button  class="small">X</button>
+                        </form>                        
+                    </td>
+
+
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="windows-1251"/>
+        <title>Интернет-магазин</title>
+        <style>
+            table, th, td {
+                border: 1px solid black;
+            }
+            input {
+                height: 15px;
+                width: 100px;
+            }
+            button {
+                height: 25px;
+                width: 150px;
+            }
+            button.big {
+                height: 25px;
+                width: 200px;
+            }
+            button.small {
+                height: 25px;
+                width: 35px;                
+            }
+            label.error {
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Интернет-магазин</h1>
+        <h2>Все заказы</h2>
+        <div>
+            <form action="./createOrder" method="POST" th:object="${customer}">
+                <label>Имя покупателя</label>
+                <input id="customerFirstName" name="customerFirstName" th:field="*{firstName}"/>
+                <label class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"/><br/>
+                <label>Фамилия покупателя</label>
+                <input id="customerLastName" name="customerLastName" th:field="*{lastName}"/>
+                <label class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"/><br/>
+                <label>Телефон покупателя</label>
+                <input id="customerPhoneNumber" name="customerPhoneNumber" th:field="*{phoneNumber}"/>
+                <label class="error" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"/><br/>
+                <label>E-mail покупателя</label>
+                <input id="customerEmail"  name="customerEmail" th:field="*{email}"/>
+                <label class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"/><br/>
+                <button>Создать заказ</button>
+            </form>
+        </div>
+        <div>
+            <div style="display: inline-block">
+                <table>
+                    <tr>
+                        <th>Id заказа</th>
+                        <th>Имя покупателя</th>
+                        <th>Фамилия покупателя</th>
+                        <th>Телефон покупателя</th>
+                        <th>E-mail покупателя</th>
+                        <th>Дата заказа</th>
+                        <th></th>
+                    </tr>
+                    <tr th:each="order : ${listOrders}">
+                        <td th:text="${order.id}"></td>
+                        <td th:text="${order.customer.firstName}"></td>
+                        <td th:text="${order.customer.lastName}"></td>
+                        <td th:text="${order.customer.phoneNumber}"></td>
+                        <td th:text="${order.customer.email}"></td>
+                        <td th:text="${order.orderDate}"></td>
+                        <td>
+                            <form style="display: inline" th:action="@{./setEditingOrder?id={id}(id = ${order.id})}" th:method="POST">
+                                <button class="small">E</button>
+                            </form>
+                            <form style="display: inline" th:action="@{./deleteOrderById?id={id}(id = ${order.id})}" th:method="DELETE">
+                                <button class="small">X</button>
+                            </form>
+                        </td>
+                    </tr>    
+                </table>
+            </div>
+            <div style="display: inline-block;" th:if="${editingOrder != null}">
+                <h2>Редактирование заказа</h2>
+                <form style="display: inline" th:action="@{./updateOrderById?id={id}(id = ${editingOrder.id})}" th:method="PUT" th:object="${editingOrder}">
+                    <label>Имя покупателя</label>
+                    <input name="customerNewFirstName" th:value="*{customer.firstName}"/>
+                    <label class="error" th:if="${#fields.hasErrors('customer.firstName')}" th:errors="*{customer.firstName}"/><br/>
+                    <label>Фамилия покупателя</label>
+                    <input name="customerNewLastName" th:value="*{customer.lastName}"/>
+                    <label class="error" th:if="${#fields.hasErrors('customer.lastName')}" th:errors="*{customer.lastName}"/><br/>
+                    <label>Телефон покупателя</label>
+                    <input name="customerNewPhoneNumber" th:value="*{customer.phoneNumber}"/>
+                    <label class="error" th:if="${#fields.hasErrors('customer.phoneNumber')}" th:errors="*{customer.phoneNumber}"/><br/>
+                    <label>E-mail покупателя</label>
+                    <input name="customerNewEmail" th:value="*{customer.email}"/>
+                    <label class="error" th:if="${#fields.hasErrors('customer.email')}" th:errors="*{customer.email}"/><br/>
+                    <button>Сохранить</button>
+                </form>
+            </div>
+        </div>
+        <h2>Позиции заказов</h2>
+        <div>
+            <form action="./addOrderItemToOrder" method="POST">
+                <label>Id заказа</label>
+                <input name="orderId"/><br/>
+                <label>Id продукта</label>
+                <input name="productId"/><br/>
+                <label>Количество продукта</label>
+                <input name="productCount"/><br/>
+                <button class="big">Добавить позицию в заказ</button>
+            </form>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <th>Id позиции</th>
+                    <th>Id заказа</th>
+                    <th>Наименование продукта</th>
+                    <th>Количество продукта</th>
+                    <th>Цена позиции</th>
+                    <th></th>
+                </tr>
+                <tr  th:each="orderItem : ${listOrdersItems}">
+                    <td th:text="${orderItem.id}"></td>
+                    <td th:text="${orderItem.order.id}"></td>                    
+                    <td th:text="${orderItem.product.title}"></td>
+                    <td th:text="${orderItem.productCount}"></td>
+                    <td th:text="${orderItem.productPrice}"></td>
+                    <td>
+                        <form style="display: inline" th:action="@{./deleteOrderItemById?id={id}(id = ${orderItem.id})}" th:method="DELETE">
+                            <button  class="small">X</button>
+                        </form>                        
+                    </td>
+                </tr>    
+            </table>
+        </div>
+        <h2>База данных продуктов</h2>
+        <div>
+            <form action="./createProduct" method="POST">
+                <label>Название продукта</label>
+                <input name="productTitle"/><br/>
+                <label>Цена продукта</label>
+                <input name="productPrice"/><br/>
+                <button>Добавить продукт</button>
+            </form>
+        </div>
+        <div style="display: inline-block;">
+            <table>
+                <tr>
+                    <th>Id продукта</th>
+                    <th>Наименование продукта</th>
+                    <th>Цена продукта</th>
+                    <th></th>
+                </tr>
+                <tr th:each="product : ${listProducts}">
+                    <td th:text="${product.id}"></td>
+                    <td th:text="${product.title}"></td>
+                    <td th:text="${product.price}"></td>
+                    <td>
+                        <form style="display: inline" th:action="@{./setEditingProduct?id={id}(id = ${product.id})}" th:method="POST">
+                            <button  class="small">E</button>
+                        </form>
+                        <form style="display: inline" th:action="@{./deleteProductById?id={id}(id = ${product.id})}" th:method="DELETE">
+                            <button  class="small">X</button>
+                        </form>
+                    </td>
+                </tr>    
+            </table>
+        </div>
+        <div style="display: inline-block;" th:if="${editingProduct != null}">
+            <h2>Редактирование заказа</h2>
+            <form style="display: inline" th:action="@{./updateProductById?id={id}(id = ${editingProduct.id})}" th:method="PUT">
+                <label>Наименование продукта</label>
+                <input name="productNewTitle" th:value="${editingProduct.title}"/><br/>
+                <label>Цена продукта</label>
+                <input name="productNewPrice" th:value="${editingProduct.price}"/><br/>
+                <button>Сохранить</button>
+            </form>
+        </div>
+    </body>
+</html>

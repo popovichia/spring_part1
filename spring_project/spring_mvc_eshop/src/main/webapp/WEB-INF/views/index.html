@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="windows-1251"/>
+        <title th:text="#{htmlpage.index.title}">Интернет-магазин.тест</title>
+        <link rel="stylesheet" type="text/css" href="./tmp/main.css" th:href="@{./css/main.css}" media="screen"/>
+    </head>
+    <body>
+        <h1 th:text="#{htmlpage.index.h1}">Интернет-магазин.тест</h1>
+        <form action="./getAllOrders" method="GET">
+            <button th:text="#{htmlpage.index.button.orders}">Заказы.тест</button>
+        </form>
+        <form action="./getAllProducts" method="GET">
+            <button th:text="#{htmlpage.index.button.products}">Продукты.тест</button>
+        </form>
+        <form action="./getAllCustomers" method="GET">
+            <button th:text="#{htmlpage.index.button.customers}">Покупатели.тест</button>
+        </form>
+        <h2 th:text="#{htmlpage.index.h2}">Список всех позиций всех заказов.тест</h2>
+        <form action="./searchByStringPattern" method="GET">
+            <label th:text="#{htmlpage.index.label.search}">Найти.тест:</label>
+            <input id="inputStringPattern" name="inputStringPattern"/>
+            <button th:text="#{htmlpage.index.button.search}">Поиск.тест</button>
+        </form>
+        <div>
+            <table>
+                <tr>
+                    <th th:text="#{htmlpage.index.th.order.item.id}">Идентификатор позиции.тест</th>
+                    <th th:text="#{htmlpage.index.th.order.id}">Идентификатор заказа.тест</th>
+                    <th th:text="#{htmlpage.index.th.order.date}">Дата заказа.тест</th>
+                    <th th:text="#{htmlpage.index.th.product.title}">Название продукта.тест</th>
+                    <th th:text="#{htmlpage.index.th.product.count}">Количество продукта.тест</th>
+                    <th th:text="#{htmlpage.index.th.order.item.price}">Цена шт. позиции.тест</th>
+                    <th th:text="#{htmlpage.index.th.customer.firstname}">Имя покупателя.тест</th>
+                    <th th:text="#{htmlpage.index.th.customer.lastname}">Фамилия покупателя.тест</th>
+                    <th th:text="#{htmlpage.index.th.customer.phonenumber}">Номер телефона покупателя.тест</th>
+                    <th th:text="#{htmlpage.index.th.customer.email}">E-Mail покупателя.тест</th>
+                </tr>
+                <tr  th:each="orderItem : ${listOrdersItems}">
+                    <td th:text="${orderItem.id}"></td>
+                    <td th:text="${orderItem.order.id}"></td>
+                    <td th:text="${orderItem.order.orderDate}"></td>
+                    <td th:text="${orderItem.product.title}"></td>
+                    <td th:text="${orderItem.productCount}"></td>
+                    <td th:text="${orderItem.productPrice}"></td>
+                    <td th:text="${orderItem.order.customer.firstName}"></td>
+                    <td th:text="${orderItem.order.customer.lastName}"></td>
+                    <td th:text="${orderItem.order.customer.phoneNumber}"></td>
+                    <td th:text="${orderItem.order.customer.email}"></td>
+                </tr>    
+            </table>
+            <label th:text="#{htmlpage.index.label.rows.count} + ${rowsCount}">
+                Общее количество записей:.тест
+            </label>
+        </div>
+        <form th:action="@{./(pageSize = ${pageSize})}" th:method="GET">
+            <label th:text="#{htmlpage.index.label.page.size}">Размер страницы, строк:.тест</label>
+            <input class="small" name="pageSize" th:value="${pageSize}"/>
+            <button th:text="#{htmlpage.index.button.page.size.save}">Сохранить.тест</button>
+        </form>
+        <ul>
+            <li th:each="pageIndex : ${#numbers.sequence(1, pagesCount)}">
+                <a th:href="@{./(pageIndex = ${pageIndex})}" th:text="${pageIndex}">Ссылка.тест</a>
+            </li>
+        </ul>
+    </body>
+</html>

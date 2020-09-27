@@ -1,15 +1,10 @@
 package ru.popovichia.eshop.controllers;
 
-import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import ru.popovichia.eshop.entities.Product;
 import ru.popovichia.eshop.services.DataService;
 
 /**
@@ -18,42 +13,20 @@ import ru.popovichia.eshop.services.DataService;
  * company: mts.ru
  */
 @Controller
-@RequestMapping(path = "/customers")
+@RequestMapping(path = "/")
 public class CustomersController {
+
+    private final static String CUSTOMERS_VIEWS_DIR = "/customers/";
     
     @Autowired
     private DataService dataService;
     
-    @PostMapping(path = "/setEditingProduct")
-    public String setEditingProduct(
-            @RequestParam(required = true) Long id
+    @GetMapping(path = "/getAllCustomers")
+    public String getAllCustomers(
+            Model model
     ) {
-        dataService.setEditingProduct(id);
-        return "redirect:./";
-    }
-
-    @GetMapping(path = "/getEditingProduct")
-    public Product getEditingProduct() {
-        return dataService.getEditingProduct();
-    }
-    
-    @PutMapping(path = "/updateProductById")
-    public String updateProductById(
-            @RequestParam(name = "id", required = true) Long id,
-            @RequestParam(name = "productNewTitle", required = true) String productNewTitle,
-            @RequestParam(name = "productNewPrice", required = true) BigDecimal productNewPrice
-    ) {
-        dataService.updateProductById(id, productNewTitle, productNewPrice);
-        dataService.setEditingProduct(null);
-        return "redirect:./";
-    }
-
-    @DeleteMapping(path = "/deleteProductById")
-    public String deleteProductById(
-            @RequestParam(name = "id", required = true) Long id
-    ) {
-        dataService.deleteProductById(id);
-        return "redirect:./";
+        model.addAttribute("listCustomers", dataService.getAllCustomersSortedByFullNameAsc());
+        return CUSTOMERS_VIEWS_DIR + "customers";
     }
 
 }

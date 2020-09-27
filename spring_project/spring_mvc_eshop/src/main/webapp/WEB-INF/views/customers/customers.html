@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="windows-1251"/>
+        <title>Интернет-магазин</title>
+        <link rel="stylesheet" type="text/css" href="../tmp/main.css" th:href="@{./css/main.css}" media="screen"/>
+    </head>
+    <body>
+        <h1>Интернет-магазин</h1>
+        <h2>Детали заказов покупателей</h2>
+        <form action="./" method="GET">
+            <button class="big">На главную страницу</button>
+        </form>
+        <div>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <th>Идентификатор покупателя</th>
+                    <th>Фамилия покупателя</th>
+                    <th>Имя покупателя</th>
+                </tr>
+                <tr th:each="customer : ${listCustomers}">
+                    <td th:text="${customer.id}"></td>
+                    <td th:text="${customer.lastName}"></td>
+                    <td th:text="${customer.firstName}"></td>
+                </tr>    
+            </table>
+        </div>
+    </body>
+</html>

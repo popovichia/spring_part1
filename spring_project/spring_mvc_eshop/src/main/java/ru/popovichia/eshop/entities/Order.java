@@ -1,10 +1,12 @@
 package ru.popovichia.eshop.entities;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,11 +36,12 @@ public class Order {
     @JoinColumn(name = "customer_id")
     private Customer customer;
     
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<OrderItem> listOrderItems; 
     
     public Order() {
         this.orderDate = new Date();
+        this.listOrderItems = new ArrayList<>();
     }
 
     public Order(Customer customer) {
