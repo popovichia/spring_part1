@@ -9,22 +9,22 @@
     <body>
         <h1 th:text="#{htmlpage.orders.h1}">Интернет-магазин.тест</h1>
         <form action="./" method="GET">
-            <button class="big">На главную страницу</button>
+            <button class="big" th:text="#{htmlpage.orders.button.back.index}">На главную страницу.тест</button>
         </form>
         <form action="./getOrderById" method="GET">
-            <button>Добавить заказ</button>
+            <button th:text="#{htmlpage.orders.button.add.order}">Добавить заказ.тест</button>
         </form>
-        <h2>Список всех заказов</h2>
+        <h2 th:text="#{htmlpage.orders.h2}">Список всех заказов.тест</h2>
         <div>
             <div>
                 <table>
                     <tr>
-                        <th>Идентификатор заказа</th>
-                        <th>Имя покупателя</th>
-                        <th>Фамилия покупателя</th>
-                        <th>Телефон покупателя</th>
-                        <th>E-mail покупателя</th>
-                        <th>Дата заказа</th>
+                        <th th:text="#{htmlpage.orders.th.order.id}">Идентификатор заказа.тест</th>
+                        <th th:text="#{htmlpage.orders.th.customer.firstname}">Имя покупателя.тест</th>
+                        <th th:text="#{htmlpage.orders.th.customer.lastname}">Фамилия покупателя.тест</th>
+                        <th th:text="#{htmlpage.orders.th.customer.phonenumber}">Телефон покупателя.тест</th>
+                        <th th:text="#{htmlpage.orders.th.customer.email}">E-mail покупателя.тест</th>
+                        <th th:text="#{htmlpage.orders.th.order.date}">Дата заказа.тест</th>
                         <th></th>
                     </tr>
                     <tr th:each="order : ${listOrders}">
@@ -35,9 +35,9 @@
                         <td th:text="${order.customer.email}"></td>
                         <td th:text="${order.orderDate}"></td>
                         <td>
-                            <a class="button" style="display: inline" th:href="@{./getOrderById(id = ${order.id})}">E</a>
-                            <form style="display: inline" th:action="@{./deleteOrderById(id = ${order.id})}" th:method="delete">
-                                <button class="small">X</button>
+                            <a class="button"  th:text="#{htmlpage.orders.button.edit}" style="display: inline" th:href="@{./getOrderById(id = ${order.id})}">E.тест</a>
+                            <form style="display: inline"  th:text="#{htmlpage.orders.button.delete}" th:action="@{./deleteOrderById(id = ${order.id})}" th:method="delete">
+                                <button class="small">X.тест</button>
                             </form>
                         </td>
                     </tr>    

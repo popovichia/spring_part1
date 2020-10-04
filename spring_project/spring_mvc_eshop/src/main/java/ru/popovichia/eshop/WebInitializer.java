@@ -1,15 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ru.popovichia.eshop;
 
-import ru.popovichia.eshop.configurations.WebApplicationConfiguration;
 import javax.servlet.Filter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+import ru.popovichia.eshop.configurations.WebApplicationConfiguration;
 
 public class WebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
     @Override
@@ -33,13 +28,9 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
 
     @Override
     protected Filter[] getServletFilters() {
-        // Создание фильтра кодировки, который позволит работать с русскими
-        // символами
         CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
         characterEncodingFilter.setEncoding("UTF-8");
         characterEncodingFilter.setForceEncoding(true);
-        // Создание фильтра, который добавляет поддержку HTTP-методов (например
-        // таких, как PUT), необходимых для REST API
         HiddenHttpMethodFilter httpMethodFilter = new HiddenHttpMethodFilter();
         return new Filter[]{characterEncodingFilter, httpMethodFilter};
     }

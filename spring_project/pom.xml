@@ -9,6 +9,7 @@
         <module>client</module>
         <module>server</module>
         <module>spring_mvc_eshop</module>
+        <module>spring_boot_eshop</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8"/>
+        <title th:text="#{htmlpage.orders.title}">Интернет-магазин.тест</title>
+        <link rel="stylesheet" type="text/css" href="../tmp/main.css" th:href="@{./css/main.css}" media="screen"/>
+    </head>
+    <body>
+        <h1 th:text="#{htmlpage.orders.h1}">Интернет-магазин.тест</h1>
+        <form action="./" method="GET">
+            <button class="big" th:text="#{htmlpage.orders.button.back.index}">На главную страницу.тест</button>
+        </form>
+        <form action="./getOrderById" method="GET">
+            <button th:text="#{htmlpage.orders.button.add.order}">Добавить заказ.тест</button>
+        </form>
+        <h2 th:text="#{htmlpage.orders.h2}">Список всех заказов.тест</h2>
+        <div>
+            <div>
+                <table>
+                    <tr>
+                        <th th:text="#{htmlpage.orders.th.order.id}">Идентификатор заказа.тест</th>
+                        <th th:text="#{htmlpage.orders.th.customer.firstname}">Имя покупателя.тест</th>
+                        <th th:text="#{htmlpage.orders.th.customer.lastname}">Фамилия покупателя.тест</th>
+                        <th th:text="#{htmlpage.orders.th.customer.phonenumber}">Телефон покупателя.тест</th>
+                        <th th:text="#{htmlpage.orders.th.customer.email}">E-mail покупателя.тест</th>
+                        <th th:text="#{htmlpage.orders.th.order.date}">Дата заказа.тест</th>
+                        <th></th>
+                    </tr>
+                    <tr th:each="order : ${listOrders}">
+                        <td th:text="${order.id}"></td>
+                        <td th:text="${order.customer.firstName}"></td>
+                        <td th:text="${order.customer.lastName}"></td>
+                        <td th:text="${order.customer.phoneNumber}"></td>
+                        <td th:text="${order.customer.email}"></td>
+                        <td th:text="${order.orderDate}"></td>
+                        <td>
+                            <a class="button"  th:text="#{htmlpage.orders.button.edit}" style="display: inline" th:href="@{./getOrderById(id = ${order.id})}">E.тест</a>
+                            <form style="display: inline"  th:text="#{htmlpage.orders.button.delete}" th:action="@{./deleteOrderById(id = ${order.id})}" th:method="delete">
+                                <button class="small">X.тест</button>
+                            </form>
+                        </td>
+                    </tr>    
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

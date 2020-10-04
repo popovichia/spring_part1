@@ -3,23 +3,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="windows-1251"/>
-        <title>Интернет-магазин</title>
+        <title th:text="#{htmlpage.customers.title}">Интернет-магазин.тест</title>
         <link rel="stylesheet" type="text/css" href="../tmp/main.css" th:href="@{./css/main.css}" media="screen"/>
     </head>
     <body>
-        <h1>Интернет-магазин</h1>
-        <h2>Детали заказов покупателей</h2>
+        <h1 th:text="#{htmlpage.customers.h1.1}">Интернет-магазин.тест</h1>
+        <h2 th:text="#{htmlpage.customers.h2.1}">Детали заказов.тест</h2>
         <form action="./" method="GET">
-            <button class="big">На главную страницу</button>
+            <button th:text="#{htmlpage.customers.button.back.index}" class="big">На главную страницу</button>
         </form>
         <div>
-        </div>
-        <div>
+            <h2 th:text="#{htmlpage.customers.h2.2}">Список всех пользователей.тест</h2>
             <table>
                 <tr>
-                    <th>Идентификатор покупателя</th>
-                    <th>Фамилия покупателя</th>
-                    <th>Имя покупателя</th>
+                    <th th:text="#{htmlpage.customers.th.customer.id}">Идентификатор покупателя.тест</th>
+                    <th th:text="#{htmlpage.customers.th.customer.lastname}">Фамилия покупателя.тест</th>
+                    <th th:text="#{htmlpage.customers.th.customer.firstname}">Имя покупателя.тест</th>
                 </tr>
                 <tr th:each="customer : ${listCustomers}">
                     <td th:text="${customer.id}"></td>
@@ -27,6 +26,29 @@
                     <td th:text="${customer.firstName}"></td>
                 </tr>    
             </table>
+        </div>
+        <div th:each="customer : ${listCustomers}">
+            <div th:each="order : ${customer.listOrders}">
+                <h2 th:text="#{htmlpage.customers.h2.3} + ${order.id}">Заказ№.тест</h2>
+                <h2 th:text="#{htmlpage.customers.h2.4}
+                        + ${order.customer.firstName} 
+                        + '.' + ${order.customer.lastName}
+                        + ', т.' + ${order.customer.phoneNumber}">
+                    Покупатель.тест
+                </h2>
+                <table>
+                    <tr>
+                        <th th:text="#{htmlpage.customers.th.orderitem.id}">Идентификатор позиции.тест</th>
+                        <th th:text="#{htmlpage.customers.th.product.name}">Название продукта.тест</th>
+                        <th th:text="#{htmlpage.customers.th.orderitem.price}">Цена позиции.тест</th>
+                    </tr>
+                    <tr th:each="orderItem : ${order.listOrderItems}">
+                        <td th:text="${orderItem.id}"></td>
+                        <td th:text="${orderItem.product.title}"></td>
+                        <td th:text="${orderItem.product.price}"></td>
+                    </tr>    
+                </table>
+            </div>
         </div>
     </body>
 </html>

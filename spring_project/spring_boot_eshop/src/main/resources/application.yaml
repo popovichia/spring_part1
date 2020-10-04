@@ -1,0 +1,28 @@
+server:
+    port: 8880
+spring:
+    datasource:
+        driver-class-name: org.sqlite.JDBC
+        url: jdbc:sqlite:C:\\Users\\iapopo17\\AppData\\Local\\Programs\\Git\\repositories\\java\\spring_part1\\spring_project\\db\\products.db
+    jpa:
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.SQLiteDialect
+    resources:
+        static-locations: classpath:/css/
+    mvc:
+        static-path-pattern: /css/**
+        hiddenmethod:
+            filter:
+                enabled: true
+    messages:
+        basename: uitext
+    thymeleaf:
+        prefix: classpath:/views/
+        
+database:
+    driver:
+        class: org.sqlite.JDBC
+    url: jdbc:sqlite:C:\\Users\\iapopo17\\AppData\\Local\\Programs\\Git\\repositories\\java\\spring_part1\\spring_project\\db\\products.db
+    username:
+    password:
