@@ -7,6 +7,7 @@ import ru.popovichia.eshop.entities.Customer;
 import ru.popovichia.eshop.entities.Order;
 import ru.popovichia.eshop.entities.OrderItem;
 import ru.popovichia.eshop.entities.Product;
+import ru.popovichia.eshop.entities.ProductDto;
 
 /**
  *
@@ -23,6 +24,7 @@ public interface DataService {
     public void deleteOrderById(Long id);
 
     public List<Product> getAllProducts();
+    public List<ProductDto> getAllProductDtos();
     public Product getProductById(Long id);
     public void saveProductById(Long id, Product product);
     public void deleteProductById(Long id);

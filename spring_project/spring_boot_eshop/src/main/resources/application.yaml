@@ -1,5 +1,6 @@
+debug: true
 server:
-    port: 8880
+    port: 80
 spring:
     datasource:
         driver-class-name: org.sqlite.JDBC

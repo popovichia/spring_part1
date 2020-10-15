@@ -12,11 +12,13 @@ import ru.popovichia.eshop.entities.Customer;
 import ru.popovichia.eshop.entities.Order;
 import ru.popovichia.eshop.entities.OrderItem;
 import ru.popovichia.eshop.entities.Product;
+import ru.popovichia.eshop.entities.ProductDto;
 import ru.popovichia.eshop.repositories.CustomersRepository;
 import ru.popovichia.eshop.repositories.CustomersRepositoryPaS;
 import ru.popovichia.eshop.repositories.OrdersItemsRepository;
 import ru.popovichia.eshop.repositories.OrdersItemsRepositoryPaS;
 import ru.popovichia.eshop.repositories.OrdersRepository;
+import ru.popovichia.eshop.repositories.ProductDtosRepository;
 import ru.popovichia.eshop.repositories.ProductsRepository;
 
 /**
@@ -39,6 +41,9 @@ public class DataServiceImpl implements DataService {
     @Autowired
     private ProductsRepository productsRepository;
     
+    @Autowired
+    private ProductDtosRepository productDtosRepository;
+
     @Autowired
     private OrdersItemsRepository ordersItemsRepository;
 
@@ -78,7 +83,11 @@ public class DataServiceImpl implements DataService {
     public List<Product> getAllProducts() {
         return productsRepository.findAll();
     }
-
+    
+    public List<ProductDto> getAllProductDtos() {
+        return productDtosRepository.findAll();
+    }
+    
     public Product getProductById(Long id) {
         
         Product product = null;
